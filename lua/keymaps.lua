@@ -63,3 +63,9 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('x', '<leader>p', '"_dP')
 -- vim: ts=2 sts=2 sw=2 et
+
+-- Window management keymaps
+vim.keymap.set('n', '<leader>ws', '<C-w>s ', { desc = '[W]indow [S]plit' })
+vim.keymap.set('n', '<leader>wv', '<C-w>v ', { desc = '[W]indow split [V]ertically' })
+vim.keymap.set('n', '<leader>wd', '<C-w>q ', { desc = '[W]indow [D]elete' })
+
