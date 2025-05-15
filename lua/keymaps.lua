@@ -69,3 +69,6 @@ vim.keymap.set('n', '<leader>ws', '<C-w>s ', { desc = '[W]indow [S]plit' })
 vim.keymap.set('n', '<leader>wv', '<C-w>v ', { desc = '[W]indow split [V]ertically' })
 vim.keymap.set('n', '<leader>wd', '<C-w>q ', { desc = '[W]indow [D]elete' })
 
+-- save utils
+vim.keymap.set('n', '<leader>ww', ':w<CR>', { desc = '[W]rite Buffer' })
+vim.keymap.set('n', '<leader>wa', ':w<CR>', { desc = '[W]rite [A]ll Buffers' })
