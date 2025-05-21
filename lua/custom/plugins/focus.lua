@@ -1,5 +1,6 @@
 return {
   'nvim-focus/focus.nvim',
+  enable = false,
   version = '*',
   opts = {
     enable = true, -- Enable module
