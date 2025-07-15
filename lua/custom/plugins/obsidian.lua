@@ -142,10 +142,15 @@ return {
       template = nil,
     },
 
-    -- Completion configuration - THIS IS THE KEY FIX
+    -- Completion configuration - UPDATED FOR TAGS AND LINKS ONLY
     completion = {
       nvim_cmp = true,
       min_chars = 2,
+      -- Ensure proper link insertion
+      new_notes_location = 'current_dir',
+      prepend_note_id = true,
+      prepend_note_path = false,
+      use_path_only = false,
     },
 
     -- Link configuration
@@ -225,30 +230,70 @@ return {
 
   config = function(_, opts)
     require('obsidian').setup(opts)
-
-    -- Setup nvim-cmp for obsidian - SIMPLIFIED AND FIXED
+    -- Add this at the end of your config function
+    require('tmux-obsidian-status').setup()
+    -- Setup nvim-cmp for obsidian - TAGS AND LINKS ONLY
     local cmp_ok, cmp = pcall(require, 'cmp')
     if cmp_ok then
-      -- Configure cmp specifically for markdown files with obsidian sources
+      -- Configure cmp specifically for markdown files with ONLY obsidian sources
       cmp.setup.filetype('markdown', {
         sources = cmp.config.sources {
-          { name = 'obsidian' },
-          { name = 'obsidian_new' },
-          { name = 'obsidian_tags' },
-          { name = 'nvim_lsp' },
-          { name = 'buffer' },
-          { name = 'path' },
+          -- Only obsidian sources for tags and links
+          { name = 'obsidian', priority = 1000 },
+          { name = 'obsidian_new', priority = 900 },
+          { name = 'obsidian_tags', priority = 800 },
         },
         mapping = cmp.mapping.preset.insert {
           ['<C-b>'] = cmp.mapping.scroll_docs(-4),
           ['<C-f>'] = cmp.mapping.scroll_docs(4),
           ['<C-Space>'] = cmp.mapping.complete(),
           ['<C-e>'] = cmp.mapping.abort(),
-          ['<CR>'] = cmp.mapping.confirm { select = true },
+          -- Ensure proper link insertion on confirm
+          ['<CR>'] = cmp.mapping.confirm {
+            select = true,
+            behavior = cmp.ConfirmBehavior.Insert,
+          },
+          ['<Tab>'] = cmp.mapping.confirm {
+            select = true,
+            behavior = cmp.ConfirmBehavior.Insert,
+          },
           ['<C-n>'] = cmp.mapping.select_next_item(),
           ['<C-p>'] = cmp.mapping.select_prev_item(),
         },
+        -- Ensure proper formatting for obsidian completions
+        formatting = {
+          format = function(entry, vim_item)
+            -- Show source type in completion menu
+            if entry.source.name == 'obsidian' then
+              vim_item.menu = '[Link]'
+            elseif entry.source.name == 'obsidian_new' then
+              vim_item.menu = '[New]'
+            elseif entry.source.name == 'obsidian_tags' then
+              vim_item.menu = '[Tag]'
+            end
+            return vim_item
+          end,
+        },
+        -- Ensure completion triggers for obsidian syntax
+        completion = {
+          autocomplete = {
+            require('cmp.types').cmp.TriggerEvent.TextChanged,
+          },
+          completeopt = 'menu,menuone,noselect',
+        },
       })
+
+      -- Custom completion behavior for obsidian links
+      local orig_confirm = cmp.confirm
+      cmp.confirm = function(opts)
+        local entry = cmp.get_selected_entry()
+        if entry and (entry.source.name == 'obsidian' or entry.source.name == 'obsidian_new') then
+          -- Ensure we get the full completion item with proper link formatting
+          opts = opts or {}
+          opts.behavior = cmp.ConfirmBehavior.Insert
+        end
+        return orig_confirm(opts)
+      end
     end
 
     -- Custom telescope functions
