@@ -47,8 +47,8 @@ local colors = {
           -- We are going to use lualine_c an lualine_x as left and
           -- right section. Both are highlighted by c theme .  So we
           -- are just setting default looks o statusline
-          normal = { c = { fg = colors.fg, bg = colors.bg } },
-          inactive = { c = { fg = colors.fg, bg = colors.bg } },
+          normal = { c = { fg = colors.fg, bg = nil } },
+          inactive = { c = { fg = nil, bg = nil } },
         },
       },
       sections = {
@@ -131,9 +131,16 @@ local colors = {
     }
 
     ins_left {
-      'filename',
+      'branch',
+      icon = '',
+      color = { fg = colors.violet, gui = 'bold' },
+    }
+    ins_left {
+      'buffers',
       cond = conditions.buffer_not_empty,
       color = { fg = colors.magenta, gui = 'bold' },
+      show_filename_only = false,
+      max_length = nil,
     }
 
     ins_left { 'location' }
@@ -193,12 +200,6 @@ local colors = {
       fmt = string.upper,
       icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
       color = { fg = colors.green, gui = 'bold' },
-    }
-
-    ins_right {
-      'branch',
-      icon = '',
-      color = { fg = colors.violet, gui = 'bold' },
     }
 
     ins_right {

@@ -111,5 +111,12 @@ vim.filetype.add {
     tsx = 'typescriptreact',
   },
 }
+-- Open file in rider
+vim.keymap.set('n', '<leader>R', function()
+  local file = vim.fn.expand '%:p'
+  local line = vim.fn.line '.'
+  vim.fn.system('rider --line ' .. line .. ' ' .. vim.fn.shellescape(file))
+end, { desc = 'Open current file in Rider at cursor line' })
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
