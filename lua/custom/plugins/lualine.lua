@@ -12,15 +12,15 @@ return {
 local colors = {
   bg       = '#202328',
   fg       = '#bbc2cf',
-  yellow   = '#ECBE7B',
+  yellow   = '#f6c177',
   cyan     = '#008080',
-  darkblue = '#081633',
-  green    = '#98be65',
-  orange   = '#FF8800',
+  darkblue = '#1f1d2e',
+  green    = '#9ccfd8',
+  orange   = '#f6c177',
   violet   = '#a9a1e1',
-  magenta  = '#c678dd',
-  blue     = '#51afef',
-  red      = '#ec5f67',
+  magenta  = '#c4a7e7',
+  blue     = '#31748f',
+  red      = '#eb6f92',
 }
 
     local conditions = {
@@ -82,18 +82,18 @@ local colors = {
       table.insert(config.sections.lualine_x, component)
     end
 
-    ins_left {
-      function()
-        return '▊'
-      end,
-      color = { fg = colors.blue }, -- Sets highlighting of component
-      padding = { left = 0, right = 1 }, -- We don't need space before this
-    }
+    -- ins_left {
+    --   function()
+    --     return '▊'
+    --   end,
+    --   color = { fg = colors.blue }, -- Sets highlighting of component
+    --   padding = { left = 0, right = 1 }, -- We don't need space before this
+    -- }
 
     ins_left {
       -- mode component
       function()
-        return ''
+        return ''
       end,
       color = function()
         -- auto change color according to neovims mode
@@ -133,14 +133,13 @@ local colors = {
     ins_left {
       'branch',
       icon = '',
-      color = { fg = colors.violet, gui = 'bold' },
+      color = { fg = colors.yellow, gui = 'bold' },
     }
     ins_left {
-      'buffers',
+      'filename',
       cond = conditions.buffer_not_empty,
       color = { fg = colors.magenta, gui = 'bold' },
-      show_filename_only = false,
-      max_length = nil,
+      path = 1,
     }
 
     ins_left { 'location' }
@@ -188,19 +187,19 @@ local colors = {
     }
 
     -- Add components to right sections
-    ins_right {
-      'o:encoding', -- option component same as &encoding in viml
-      fmt = string.upper, -- I'm not sure why it's upper case either ;)
-      cond = conditions.hide_in_width,
-      color = { fg = colors.green, gui = 'bold' },
-    }
-
-    ins_right {
-      'fileformat',
-      fmt = string.upper,
-      icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
-      color = { fg = colors.green, gui = 'bold' },
-    }
+    -- ins_right {
+    --   'o:encoding', -- option component same as &encoding in viml
+    --   fmt = string.upper, -- I'm not sure why it's upper case either ;)
+    --   cond = conditions.hide_in_width,
+    --   color = { fg = colors.green, gui = 'bold' },
+    -- }
+    --
+    -- ins_right {
+    --   'fileformat',
+    --   fmt = string.upper,
+    --   icons_enabled = false, -- I think icons are cool but Eviline doesn't have them. sigh
+    --   color = { fg = colors.cyan, gui = 'bold' },
+    -- }
 
     ins_right {
       'diff',
@@ -214,13 +213,14 @@ local colors = {
       cond = conditions.hide_in_width,
     }
 
-    ins_right {
-      function()
-        return '▊'
-      end,
-      color = { fg = colors.blue },
-      padding = { left = 1 },
-    }
+    -- ins_right {
+    --   function()
+    --     return '▊'
+    --   end,
+    --   color = { fg = colors.blue },
+    --   padding = { left = 1 },
+    -- }
+    --
 
     -- Now don't forget to initialize lualine
     lualine.setup(config)
